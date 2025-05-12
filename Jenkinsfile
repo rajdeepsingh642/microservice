@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Git Checkout') {
             steps {
-                git branch: 'feature/traces-log-monitoring', url: 'https://github.com/saurabhsharmaj/Java-MicroService-Training.git'
+               git 'https://github.com/rajdeepsingh642/microservice.git'
             }
         }
 
