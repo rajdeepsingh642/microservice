@@ -7,7 +7,13 @@ pipeline {
             }
         }
 
-        
+     
+        stage('Maven Build') {
+            steps {
+                echo 'Building the project with Maven...'
+                sh 'mvn clean package -DskipTests'
+            }
+        }
 
        
         stage('Build Docker Image and Tag') {
