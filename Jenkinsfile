@@ -79,7 +79,6 @@ EG3TAqBl25PwhbP3buSywNzwmh63b2qvz5EQq7ix30R3/mNT0W9oTetian/3PN1D
                     credentialsId: 'k8s-token',
                     serverUrl: 'https://192.168.33.132:6443'
                 ) {
-                    sh 'kubectl apply -f ./k8s/observability.yaml'
                     sh 'kubectl apply -f ./k8s/java-deployment.yml'
                 }
             }
