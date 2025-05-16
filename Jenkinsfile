@@ -1,13 +1,13 @@
 pipeline {
-    agent  any
+    agent any
+
     stages {
         stage('Git Checkout') {
             steps {
-               git 'https://github.com/rajdeepsingh642/microservice.git'
+                git 'https://github.com/rajdeepsingh642/microservice.git'
             }
         }
 
-     
         stage('Maven Build') {
             steps {
                 echo 'Building the project with Maven...'
@@ -15,7 +15,6 @@ pipeline {
             }
         }
 
-       
         stage('Build Docker Image and Tag') {
             steps {
                 script {
@@ -42,10 +41,20 @@ pipeline {
                         '''
                     }
                 }
-        
-         }
-        
-         stage('Deploy to k8s') {
+            }
+        }
+
+        stage('Update Kubernetes YAML') {
+            steps {
+                script {
+                    sh """
+                        sed -i 's|image: rajdeepsingh642/micro-service:.*|image: rajdeepsingh642/micro-service:${BUILD_NUMBER}|' ./k8s/java-deployment.yml
+                    """
+                }
+            }
+        }
+
+        stage('Deploy to k8s') {
             steps {
                 withKubeConfig(
                     caCertificate: '''-----BEGIN CERTIFICATE-----
@@ -71,14 +80,9 @@ EG3TAqBl25PwhbP3buSywNzwmh63b2qvz5EQq7ix30R3/mNT0W9oTetian/3PN1D
                     serverUrl: 'https://192.168.33.132:6443'
                 ) {
                     sh 'kubectl apply -f ./k8s/observability.yaml'
-                    sh  'kubectl apply -f ./k8s/java-deployment.yml'
+                    sh 'kubectl apply -f ./k8s/java-deployment.yml'
                 }
             }
-        
         }
-        
-        
-        
-        
     }
 }
