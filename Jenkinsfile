@@ -7,6 +7,13 @@ pipeline {
                 git 'https://github.com/rajdeepsingh642/microservice.git'
             }
         }
+         stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv("${env.SONARQUBE}") {
+                    sh 'mvn sonar:sonar -Dsonar.projectKey=microservice -Dsonar.host.url=http://192.168.1.42:9000'
+                }
+            }
+        }
 
         stage('Maven Build') {
             steps {
