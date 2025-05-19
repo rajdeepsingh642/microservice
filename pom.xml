@@ -24,6 +24,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>17</java.version>
+		<sonar.projectKey>microservice</sonar.projectKey>
+                <sonar.host.url>http://192.168.1.42:9000</sonar.host.url>
 	</properties>
 
 	<dependencies>
