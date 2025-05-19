@@ -13,7 +13,7 @@ pipeline {
          stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv("${env.SONARQUBE}") {
-                    sh 'mvn sonar:sonar -Dsonar.projectKey=microservice -Dsonar.host.url=http://192.168.1.42:9000'
+                    sh 'mvn sonar:sonar -Dsonar.projectKey=microservice -Dsonar.host.url=http://192.168.1.51:9000'
                 }
             }
         }
