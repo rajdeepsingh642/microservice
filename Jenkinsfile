@@ -4,24 +4,38 @@ pipeline {
     environment {
         SONARQUBE = 'SonarQube' 
     }
+
     stages {
         stage('Git Checkout') {
             steps {
                 git 'https://github.com/rajdeepsingh642/microservice.git'
             }
         }
-         stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv("${env.SONARQUBE}") {
-                    sh 'mvn sonar:sonar -Dsonar.projectKey=microservice -Dsonar.host.url=http://192.168.1.51:9000'
-                }
-            }
-        }
 
         stage('Maven Build') {
             steps {
                 echo 'Building the project with Maven...'
-                sh 'mvn clean package -DskipTests'
+                sh 'mvn clean compile'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv("${env.SONARQUBE}") {
+                    sh '''
+                        mvn sonar:sonar \
+                            -Dsonar.projectKey=microservice \
+                            -Dsonar.host.url=http://192.168.1.51:9000 \
+                            -Dsonar.java.binaries=target/classes
+                    '''
+                }
+            }
+        }
+
+        stage('Package') {
+            steps {
+                echo 'Packaging the project with Maven...'
+                sh 'mvn package -DskipTests'
             }
         }
 
@@ -67,7 +81,6 @@ pipeline {
         stage('Deploy to k8s') {
             steps {
                 withKubeConfig(
-                    
                     credentialsId: 'k8s-token',
                     serverUrl: 'https://192.168.33.132:6443'
                 ) {
