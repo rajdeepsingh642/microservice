@@ -1,6 +1,9 @@
 pipeline {
     agent any
 
+    environment {
+        SONARQUBE = 'SonarQube' 
+    }
     stages {
         stage('Git Checkout') {
             steps {
